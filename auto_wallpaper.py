@@ -4,7 +4,7 @@ import os
 import random
 
 
-
+# use the list of weather type define by wttr.in
 WWO_CODE = {
     "Clear" : "Sunny",
     "Sunny" : "Sunny",
@@ -28,6 +28,8 @@ WWO_CODE = {
     "ThunderySnowShowers": "Thunder",
 }
 
+
+#Script using Apple service
 SCRIPT = """/usr/bin/osascript<<END
 tell application "Finder"
 set desktop picture to POSIX file "%s"
@@ -35,7 +37,11 @@ end tell
 END"""
 
 
+
 def createImagesFolders(list_folders_name):
+    """
+    create the different folders for each weather, i.e. Sunny, Snow, etc.
+    """
     username = os.getlogin()
     folder_path = "/Users/"+username+"/wallpaper/"
     for name in list_folders_name:
@@ -45,11 +51,17 @@ def createImagesFolders(list_folders_name):
 
 
 def set_desktop_background(filename):
+    """
+    Run the Apple Service
+    """
     subprocess.Popen(SCRIPT%filename, shell=True)
     return 0
 
 
 def checkIfFoldersAreAlreadyHere(list_folders_name):
+    """
+    Check if the different weather folders are already created
+    """
     username = os.getlogin()
     folder_path = "/Users/"+username+"/wallpaper/"
     for name in list_folders_name:
@@ -58,6 +70,11 @@ def checkIfFoldersAreAlreadyHere(list_folders_name):
     return True
 
 def main():
+    """
+    main routine, check if weather folders exist, if no create them.
+    Then, parse wttr.in/Location to obtain the weather.
+    Select randomly an image in the weather folder associated to today weather
+    """
     list_folders_name = ["Sunny", "PartlyCloudy", "Cloudy", "Rain", "Fog", "Snow", "Thunder"]
     if checkIfFoldersAreAlreadyHere(list_folders_name) == False:
         createImagesFolders(list_folders_name)
